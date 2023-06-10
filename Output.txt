@@ -1,0 +1,1 @@
+{"root":{"msg-list":["Purchase with card 966796********9060 on 18.11.9920 11:14, amount 930000000045 .","Withdrawal with card 823725********1058 on 18.11.0020 12:09, amount 790000000010 ."],"totals":{"date":"2023-06-10","cnt":"2","sum":"1720000000055"}}}
