@@ -2,19 +2,24 @@ package org.example;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class JsonCreator {
 
     private List<String> jsonTransactions = new ArrayList<>();
 
-    public void convertToJson(List<Transaction> transactions) {
+    private void convertToJson(List<Transaction> transactions) {
 
         for (Transaction transaction : transactions) {
             String jsonTransaction = generateTransactionString(transaction);
@@ -22,7 +27,7 @@ public class JsonCreator {
         }
     }
 
-    public void getOutputFile(List<Transaction> transactions) {
+    public void getOutputFile(List<Transaction> transactions, File file) {
         convertToJson(transactions);
 
         JSONObject root = new JSONObject();
@@ -39,10 +44,9 @@ public class JsonCreator {
         JSONObject jsonOutput = new JSONObject();
         jsonOutput.put("root", root);
 
-        System.out.println(jsonOutput.toJSONString());
-
-        try (FileWriter fileWriter = new FileWriter("Output.json")) {
+        try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(jsonOutput.toJSONString());
+            //log info
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,7 +62,7 @@ public class JsonCreator {
         return totalAmount;
     }
 
-    public String getCurrentDate() {
+    private String getCurrentDate() {
         LocalDate currentDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return currentDate.format(formatter);
@@ -91,8 +95,19 @@ public class JsonCreator {
             default:
                 return "";
         }
+    }
 
+    private String formatAmount(String input) {
+        int length = input.length();
+        int scale = length - 2;
 
+        BigDecimal bigDecimal = new BigDecimal(input);
+        bigDecimal = bigDecimal.setScale(scale).movePointLeft(2).stripTrailingZeros();
+
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+        symbols.setDecimalSeparator('.');
+
+        return new DecimalFormat("0.00", symbols).format(bigDecimal);
     }
 
     public String formatTime(String input) {
@@ -109,7 +124,7 @@ public class JsonCreator {
         String type = getType(transaction.getType());
         String maskedPAN = maskPAN(transaction.getPAN());
         String date = formatTime(transaction.getTime());
-        String amount = transaction.getAmount();
+        String amount = formatAmount(transaction.getAmount());
         String currency = getCurrency(transaction.getCode());
 
         return type + " with card " + maskedPAN + " on " + date + ", amount " + amount + " " + currency + ".";

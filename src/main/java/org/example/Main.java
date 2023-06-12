@@ -1,21 +1,41 @@
 package org.example;
 
 import java.io.File;
+import java.util.List;
 
 public class Main {
-
+    static LogCreator logCreator = new LogCreator();
     public static void main(String[] args) {
+        logCreator.configureLogger();
+        logCreator.logInfo("Logger configured");
 
-        JsonCreator SSS = new JsonCreator();
+        if (args.length < 1 || args.length > 2) {
+            logCreator.logError("ERROR");
+            return;
+        }
 
-        FileWork XXX = new FileWork();
+        String transactionFilePath = args[0];
+        String messageFilePath = args.length == 2 ? args[1] : null;
 
-        File file = new File("C:\\Users\\andrj\\IdeaProjects\\gusevs_tieto_task_\\src\\main\\java\\org\\example\\Input.txt");
+        File transactionFile = new File(transactionFilePath);
+        if (!transactionFile.exists()) {
+            logCreator.logError("No input");
+            return;
+        }
 
-        XXX.getInformationFromFile(file);
+        FileWork fileWork = new FileWork();
+        fileWork.getInformationFromFile(transactionFile);
+        logCreator.logInfo("File was read");
+        List<Transaction> transactions = fileWork.getTransactions();
 
-        SSS.getOutputFile(XXX.getTransactions());
-
+        JsonCreator jsonCreator = new JsonCreator();
+        if (messageFilePath != null) {
+            File messageFile = new File(messageFilePath);
+            jsonCreator.getOutputFile(transactions, messageFile);
+            logCreator.logInfo("Json file was added");
+        } else {
+            jsonCreator.getOutputFile(transactions, new File("StandartOutput.json"));
+            logCreator.logInfo("Standard file was created");
+        }
     }
-
 }
