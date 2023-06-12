@@ -10,7 +10,7 @@ public class Main {
         logCreator.logInfo("Logger configured");
 
         if (args.length < 1 || args.length > 2) {
-            logCreator.logError("ERROR");
+            logCreator.logError("No input or more files than needed");
             return;
         }
 
@@ -19,11 +19,11 @@ public class Main {
 
         File transactionFile = new File(transactionFilePath);
         if (!transactionFile.exists()) {
-            logCreator.logError("No input");
+            logCreator.logError("No transactions");
             return;
         }
 
-        FileWork fileWork = new FileWork();
+        FileReader fileWork = new FileReader();
         fileWork.getInformationFromFile(transactionFile);
         logCreator.logInfo("File was read");
         List<Transaction> transactions = fileWork.getTransactions();
@@ -32,7 +32,7 @@ public class Main {
         if (messageFilePath != null) {
             File messageFile = new File(messageFilePath);
             jsonCreator.getOutputFile(transactions, messageFile);
-            logCreator.logInfo("Json file was added");
+            logCreator.logInfo("Output file was created");
         } else {
             jsonCreator.getOutputFile(transactions, new File("StandartOutput.json"));
             logCreator.logInfo("Standard file was created");

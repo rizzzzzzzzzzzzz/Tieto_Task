@@ -14,8 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class LogCreator {
-    private final String LOG_PATTERN = "%d{HH:mm:ss.SSS} %msg%n";
-    private final String PROGRAM_NAME = "trn2msg";
     private final Logger logger;
 
     public LogCreator() {
@@ -24,6 +22,7 @@ public class LogCreator {
 
     public void configureLogger() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");
+        String PROGRAM_NAME = "trn2msg";
         String logFileName = PROGRAM_NAME + "" + dateFormat.format(new Date()) + ".log";
 
         LoggerContext context = (LoggerContext) LogManager.getContext(false);
@@ -33,8 +32,7 @@ public class LogCreator {
             config.getLoggerConfig(logger.getName()).removeAppender(appender.getName());
         }
 
-
-        // Create the FileAppender with the desired log file name and pattern
+        String LOG_PATTERN = "%d{HH:mm:ss.SSS} %msg%n";
         FileAppender fileAppender = FileAppender.newBuilder()
                 .withFileName(logFileName)
                 .withAppend(true)
@@ -43,10 +41,8 @@ public class LogCreator {
                 .build();
         fileAppender.start();
 
-        // Add the FileAppender to the logger
         config.getLoggerConfig(logger.getName()).addAppender(fileAppender, Level.ALL, null);
         config.getLoggerConfig(logger.getName()).setLevel(Level.ALL);
-        // Update the logger configuration
         context.updateLoggers();
     }
 

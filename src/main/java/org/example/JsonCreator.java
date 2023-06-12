@@ -46,7 +46,6 @@ public class JsonCreator {
 
         try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(jsonOutput.toJSONString());
-            //log info
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -129,5 +128,4 @@ public class JsonCreator {
 
         return type + " with card " + maskedPAN + " on " + date + ", amount " + amount + " " + currency + ".";
     }
-
 }

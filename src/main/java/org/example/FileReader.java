@@ -2,12 +2,11 @@ package org.example;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileWork {
+public class FileReader {
     private List<Transaction> transactions = new ArrayList<>();
 
     public List<Transaction> getTransactions() {
@@ -16,7 +15,7 @@ public class FileWork {
 
     public void getInformationFromFile(File file){
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))){
+        try (BufferedReader reader = new BufferedReader(new java.io.FileReader(file))){
             String line;
             while ((line = reader.readLine()) != null){
                 Transaction transaction = new Transaction();
@@ -32,6 +31,4 @@ public class FileWork {
             e.printStackTrace();
         }
     }
-
-
 }
