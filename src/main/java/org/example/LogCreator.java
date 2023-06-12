@@ -23,7 +23,7 @@ public class LogCreator {
     public void configureLogger() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");
         String PROGRAM_NAME = "trn2msg";
-        String logFileName = PROGRAM_NAME + "" + dateFormat.format(new Date()) + ".log";
+        String logFileName = PROGRAM_NAME + "_" + dateFormat.format(new Date()) + ".log";
 
         LoggerContext context = (LoggerContext) LogManager.getContext(false);
         Configuration config = context.getConfiguration();
